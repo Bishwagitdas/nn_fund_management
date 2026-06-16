@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_incoming_fund_form" model="ir.ui.view">
+            <field name="name">nn.incoming.fund.form</field>
+            <field name="model">nn.incoming.fund</field>
+            <field name="arch" type="xml">
+                <form string="Incoming Fund">
+                    <header>
+                        <button name="action_confirm" string="Confirm" type="object"
+                            class="btn-primary" invisible="state != 'draft'"
+                            groups="nn_fund_management.group_fund_finance_user"/>
+                        <button name="action_cancel" string="Cancel" type="object"
+                            invisible="state == 'cancelled'"/>
+                        <field name="state" widget="statusbar"
+                            statusbar_visible="draft,confirmed,cancelled"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="name" readonly="1"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="fund_account_id"/>
+                                <field name="date"/>
+                                <field name="amount"/>
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="transaction_ref"/>
+                                <field name="sender"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                        <field name="description" placeholder="Description..."/>
+                        <field name="attachment_ids" widget="many2many_binary"/>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_incoming_fund_tree" model="ir.ui.view">
+            <field name="name">nn.incoming.fund.tree</field>
+            <field name="model">nn.incoming.fund</field>
+            <field name="arch" type="xml">
+                <tree string="Incoming Funds"
+                    decoration-success="state=='confirmed'"
+                    decoration-muted="state=='cancelled'">
+                    <field name="name"/>
+                    <field name="fund_account_id"/>
+                    <field name="date"/>
+                    <field name="amount"/>
+                    <field name="transaction_ref"/>
+                    <field name="sender"/>
+                    <field name="state" widget="badge"
+                        decoration-success="state=='confirmed'"
+                        decoration-warning="state=='draft'"
+                        decoration-danger="state=='cancelled'"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_incoming_fund_search" model="ir.ui.view">
+            <field name="name">nn.incoming.fund.search</field>
+            <field name="model">nn.incoming.fund</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="transaction_ref"/>
+                    <field name="sender"/>
+                    <field name="fund_account_id"/>
+                    <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
+                    <filter name="confirmed" string="Confirmed" domain="[('state','=','confirmed')]"/>
+                    <filter name="cancelled" string="Cancelled" domain="[('state','=','cancelled')]"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_account" string="Fund Account"
+                            context="{'group_by': 'fund_account_id'}"/>
+                        <filter name="group_state" string="Status"
+                            context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_incoming_fund" model="ir.actions.act_window">
+            <field name="name">Incoming Funds</field>
+            <field name="res_model">nn.incoming.fund</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

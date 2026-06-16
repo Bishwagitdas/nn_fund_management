@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Root Menu -->
+        <menuitem id="menu_fund_management_root"
+            name="Fund Management"
+            sequence="50"
+            groups="nn_fund_management.group_fund_user"
+            web_icon="nn_fund_management,static/description/icon.png"/>
+
+        <!-- Fund Operations -->
+        <menuitem id="menu_fund_operations"
+            name="Fund Operations"
+            parent="menu_fund_management_root"
+            sequence="10"/>
+
+        <menuitem id="menu_fund_account"
+            name="Fund Accounts"
+            parent="menu_fund_operations"
+            action="action_fund_account"
+            sequence="10"
+            groups="nn_fund_management.group_fund_finance_user"/>
+
+        <menuitem id="menu_incoming_fund"
+            name="Incoming Funds"
+            parent="menu_fund_operations"
+            action="action_incoming_fund"
+            sequence="20"/>
+
+        <menuitem id="menu_fund_allocation"
+            name="Allocations"
+            parent="menu_fund_operations"
+            action="action_fund_allocation"
+            sequence="30"/>
+
+        <menuitem id="menu_fund_transfer"
+            name="Transfers"
+            parent="menu_fund_operations"
+            action="action_fund_transfer"
+            sequence="40"/>
+
+        <!-- Requisitions & Bills -->
+        <menuitem id="menu_fund_spend"
+            name="Spending"
+            parent="menu_fund_management_root"
+            sequence="20"/>
+
+        <menuitem id="menu_fund_requisition"
+            name="Requisitions"
+            parent="menu_fund_spend"
+            action="action_fund_requisition"
+            sequence="10"/>
+
+        <menuitem id="menu_fund_bill"
+            name="Bills"
+            parent="menu_fund_spend"
+            action="action_fund_bill"
+            sequence="20"/>
+
+        <!-- Master Data -->
+        <menuitem id="menu_fund_master"
+            name="Master Data"
+            parent="menu_fund_management_root"
+            sequence="30"/>
+
+        <menuitem id="menu_fund_project"
+            name="Projects"
+            parent="menu_fund_master"
+            action="action_fund_project"
+            sequence="10"/>
+
+        <menuitem id="menu_expense_head"
+            name="Expense Heads"
+            parent="menu_fund_master"
+            action="action_expense_head"
+            sequence="20"/>
+
+        <!-- Reports & History -->
+        <menuitem id="menu_fund_reports"
+            name="Reports &amp; History"
+            parent="menu_fund_management_root"
+            sequence="40"/>
+
+        <menuitem id="menu_audit_log"
+            name="Audit Log"
+            parent="menu_fund_reports"
+            action="action_audit_log"
+            sequence="10"/>
+
+        <menuitem id="menu_approval_history"
+            name="Approval History"
+            parent="menu_fund_reports"
+            action="action_approval_history"
+            sequence="20"/>
+
+        <!-- Configuration -->
+        <menuitem id="menu_fund_config_root"
+            name="Configuration"
+            parent="menu_fund_management_root"
+            sequence="99"
+            groups="nn_fund_management.group_fund_administrator"/>
+
+        <menuitem id="menu_fund_config"
+            name="Fund Settings"
+            parent="menu_fund_config_root"
+            action="action_fund_config"
+            sequence="10"/>
+    </data>
+</odoo>
