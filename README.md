@@ -179,7 +179,7 @@ docker compose exec odoo odoo \
   -d your_database
 ```
 
-### Manual Demo Scenario (from assessment section 13)
+### Manual Demo Scenario
 
 Follow these steps in the UI to verify all features:
 

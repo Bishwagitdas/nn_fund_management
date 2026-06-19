@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_bank_email_log_tree" model="ir.ui.view">
+            <field name="name">nn.bank.email.log.tree</field>
+            <field name="model">nn.bank.email.log</field>
+            <field name="arch" type="xml">
+                <tree string="Bank Email Log" create="false" edit="false"
+                    decoration-success="status=='parsed'"
+                    decoration-danger="status=='failed'"
+                    decoration-warning="status=='duplicate'">
+                    <field name="received_date"/>
+                    <field name="name"/>
+                    <field name="bank_name"/>
+                    <field name="transaction_ref"/>
+                    <field name="received_amount"/>
+                    <field name="status" widget="badge"
+                        decoration-success="status=='parsed'"
+                        decoration-danger="status=='failed'"
+                        decoration-warning="status=='duplicate'"/>
+                    <field name="incoming_fund_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_bank_email_log_form" model="ir.ui.view">
+            <field name="name">nn.bank.email.log.form</field>
+            <field name="model">nn.bank.email.log</field>
+            <field name="arch" type="xml">
+                <form string="Bank Email Log" create="false" edit="false">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="message_id"/>
+                                <field name="received_date"/>
+                                <field name="status"/>
+                            </group>
+                            <group>
+                                <field name="bank_name"/>
+                                <field name="account_number_masked"/>
+                                <field name="transaction_ref"/>
+                                <field name="received_amount"/>
+                                <field name="incoming_fund_id"/>
+                            </group>
+                        </group>
+                        <field name="error_message" invisible="status == 'parsed'"/>
+                        <separator string="Raw Email Body"/>
+                        <field name="raw_body" readonly="1"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_bank_email_log" model="ir.actions.act_window">
+            <field name="name">Bank Email Log</field>
+            <field name="res_model">nn.bank.email.log</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_bank_email_log"
+            name="Bank Email Log"
+            parent="menu_fund_reports"
+            action="action_bank_email_log"
+            sequence="30"/>
+    </data>
+</odoo>

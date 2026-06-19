@@ -26,3 +26,12 @@ access_audit_log_user,nn.audit.log user,model_nn_audit_log,group_fund_user,1,0,0
 access_audit_log_admin,nn.audit.log admin,model_nn_audit_log,group_fund_administrator,1,1,1,1
 access_fund_config_admin,nn.fund.config admin,model_nn_fund_config,group_fund_administrator,1,1,1,1
 access_fund_config_user,nn.fund.config user,model_nn_fund_config,group_fund_user,1,0,0,0
+access_approval_rule_user,nn.approval.rule user,model_nn_approval_rule,group_fund_user,1,0,0,0
+access_approval_rule_admin,nn.approval.rule admin,model_nn_approval_rule,group_fund_administrator,1,1,1,1
+access_approval_rule_line_user,nn.approval.rule.line user,model_nn_approval_rule_line,group_fund_user,1,0,0,0
+access_approval_rule_line_admin,nn.approval.rule.line admin,model_nn_approval_rule_line,group_fund_administrator,1,1,1,1
+access_bank_email_log_user,nn.bank.email.log user,model_nn_bank_email_log,group_fund_user,1,0,0,0
+access_bank_email_log_finance,nn.bank.email.log finance,model_nn_bank_email_log,group_fund_finance_user,1,1,1,0
+access_bank_email_log_admin,nn.bank.email.log admin,model_nn_bank_email_log,group_fund_administrator,1,1,1,1
+access_fund_dashboard_user,nn.fund.dashboard user,model_nn_fund_dashboard,group_fund_user,1,1,1,1
+access_bank_email_test_wizard_admin,nn.bank.email.test.wizard admin,model_nn_bank_email_test_wizard,group_fund_administrator,1,1,1,1

@@ -25,6 +25,27 @@ class ApprovalMixin(models.AbstractModel):
     md_approved_date = fields.Datetime(string='MD Approved Date', copy=False)
     rejection_reason = fields.Text(string='Rejection Reason', copy=False)
     approval_history_ids = fields.One2many('nn.approval.history', compute='_compute_approval_history')
+    matched_rule_id = fields.Many2one('nn.approval.rule', string='Applicable Approval Rule',
+                                       compute='_compute_matched_rule')
+
+    def _compute_matched_rule(self):
+        type_map = {
+            'nn.fund.allocation': 'allocation',
+            'nn.fund.requisition': 'requisition',
+            'nn.fund.transfer': 'transfer',
+        }
+        request_type = type_map.get(self._name, 'all')
+        for rec in self:
+            try:
+                category = 'any'
+                expense_head = getattr(rec, 'expense_head_id', False)
+                if expense_head:
+                    category = expense_head.category
+                amount = getattr(rec, 'amount', 0)
+                rec.matched_rule_id = self.env['nn.approval.rule'].get_matching_rule(
+                    amount, request_type=request_type, company=rec.company_id, category=category)
+            except Exception:
+                rec.matched_rule_id = False
 
     def _compute_approval_history(self):
         History = self.env['nn.approval.history']

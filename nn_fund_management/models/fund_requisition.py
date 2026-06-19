@@ -45,6 +45,30 @@ class FundRequisition(models.Model):
                 rec.remaining_billable_amount = rec.amount - posted
             else:
                 rec.remaining_billable_amount = 0.0
+            rec._check_almost_fully_used(posted)
+
+    def _check_almost_fully_used(self, posted_amount):
+        """Notify requester and Finance Users when a requisition crosses
+        90% billed. Posts only once by checking existing chatter messages."""
+        if self.state != 'approved' or not self.amount:
+            return
+        used_ratio = posted_amount / self.amount
+        if used_ratio < 0.9:
+            return
+        already_notified = self.message_ids.filtered(
+            lambda m: 'almost fully used' in (m.body or ''))
+        if already_notified:
+            return
+        finance_group = self.env.ref(
+            'nn_fund_management.group_fund_finance_user', raise_if_not_found=False)
+        finance_users = finance_group.users if finance_group else self.env['res.users']
+        partner_ids = (self.requested_by.partner_id | finance_users.mapped('partner_id')).ids
+        self.message_post(
+            body=f'Requisition {self.name} is now {used_ratio * 100:.0f}% billed '
+                 f'(remaining billable: {self.amount - posted_amount:.2f}). '
+                 f'It is almost fully used.',
+            partner_ids=partner_ids,
+        )
 
     @api.constrains('project_id', 'expense_head_id', 'requisition_type')
     def _check_project_or_expense(self):

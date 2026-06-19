@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_approval_rule_form" model="ir.ui.view">
+            <field name="name">nn.approval.rule.form</field>
+            <field name="model">nn.approval.rule</field>
+            <field name="arch" type="xml">
+                <form string="Approval Rule">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="sequence"/>
+                                <field name="request_type"/>
+                                <field name="active"/>
+                            </group>
+                            <group>
+                                <field name="min_amount"/>
+                                <field name="max_amount"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="project_category"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Approval Sequence">
+                                <field name="approval_line_ids">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="level_name"/>
+                                        <field name="approver_ids" widget="many2many_tags"/>
+                                        <field name="approver_group_id"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_approval_rule_tree" model="ir.ui.view">
+            <field name="name">nn.approval.rule.tree</field>
+            <field name="model">nn.approval.rule</field>
+            <field name="arch" type="xml">
+                <tree string="Approval Rules">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="request_type"/>
+                    <field name="min_amount"/>
+                    <field name="max_amount"/>
+                    <field name="project_category"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_approval_rule" model="ir.actions.act_window">
+            <field name="name">Approval Rules</field>
+            <field name="res_model">nn.approval.rule</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_approval_rule"
+            name="Approval Rules"
+            parent="menu_fund_config_root"
+            action="action_approval_rule"
+            sequence="20"/>
+    </data>
+</odoo>

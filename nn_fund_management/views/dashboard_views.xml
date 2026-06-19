@@ -93,5 +93,72 @@
             <field name="res_model">nn.fund.config</field>
             <field name="view_mode">list,form</field>
         </record>
+
+        <!-- Fund Dashboard -->
+        <record id="view_fund_dashboard_form" model="ir.ui.view">
+            <field name="name">nn.fund.dashboard.form</field>
+            <field name="model">nn.fund.dashboard</field>
+            <field name="arch" type="xml">
+                <form string="Fund Management Dashboard" create="false" edit="false" delete="false">
+                    <header>
+                        <button name="action_refresh" string="Refresh" type="object" class="btn-primary"/>
+                    </header>
+                    <sheet>
+                        <group string="Fund Summary" col="4">
+                            <field name="total_received" readonly="1"/>
+                            <field name="total_unassigned" readonly="1"/>
+                            <field name="total_on_hold" readonly="1"/>
+                            <field name="total_assigned" readonly="1"/>
+                            <field name="total_spent" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Pending Approvals" col="4">
+                            <field name="pending_allocations" readonly="1"/>
+                            <field name="pending_requisitions" readonly="1"/>
+                            <field name="pending_transfers" readonly="1"/>
+                            <field name="total_pending_approvals" readonly="1"/>
+                        </group>
+                        <notebook>
+                            <page string="Project Balances">
+                                <field name="project_balance_ids" readonly="1">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="total_allocated"/>
+                                        <field name="available_fund"/>
+                                        <field name="requisition_hold"/>
+                                        <field name="transfer_hold"/>
+                                        <field name="total_spent"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Expense Head Balances">
+                                <field name="expense_balance_ids" readonly="1">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="category"/>
+                                        <field name="total_allocated"/>
+                                        <field name="available_fund"/>
+                                        <field name="total_spent"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_fund_dashboard" model="ir.actions.act_window">
+            <field name="name">Fund Dashboard</field>
+            <field name="res_model">nn.fund.dashboard</field>
+            <field name="view_mode">form</field>
+            <field name="target">current</field>
+        </record>
+
+        <menuitem id="menu_fund_dashboard"
+            name="Dashboard"
+            parent="menu_fund_management_root"
+            action="action_fund_dashboard"
+            sequence="5"/>
     </data>
 </odoo>

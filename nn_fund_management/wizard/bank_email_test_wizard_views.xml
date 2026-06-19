@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_bank_email_test_wizard_form" model="ir.ui.view">
+            <field name="name">nn.bank.email.test.wizard.form</field>
+            <field name="model">nn.bank.email.test.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Test Bank Email Parser">
+                    <group>
+                        <field name="fund_account_id"/>
+                        <field name="subject"/>
+                        <field name="sender"/>
+                    </group>
+                    <field name="body" placeholder="Paste bank notification email text here..."/>
+                    <field name="result_message" readonly="1" invisible="not result_message"/>
+                    <footer>
+                        <button name="action_run_parser" string="Run Parser"
+                            type="object" class="btn-primary"/>
+                        <button string="Close" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_bank_email_test_wizard" model="ir.actions.act_window">
+            <field name="name">Test Bank Email Parser</field>
+            <field name="res_model">nn.bank.email.test.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_bank_email_test"
+            name="Test Email Parser"
+            parent="nn_fund_management.menu_fund_config_root"
+            action="action_bank_email_test_wizard"
+            sequence="30"/>
+    </data>
+</odoo>

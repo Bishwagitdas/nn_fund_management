@@ -4,9 +4,12 @@ from . import incoming_fund
 from . import fund_project
 from . import expense_head
 from . import approval_history
+from . import approval_rule
 from . import approval_mixin
 from . import fund_allocation
 from . import fund_requisition
 from . import fund_bill
 from . import fund_transfer
 from . import audit_log
+from . import bank_email_parser
+from . import fund_dashboard
