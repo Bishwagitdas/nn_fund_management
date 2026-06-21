@@ -29,6 +29,12 @@
             <field name="view_mode">list</field>
         </record>
 
+        <menuitem id="menu_audit_log"
+            name="Audit Log"
+            parent="menu_fund_reports"
+            action="action_audit_log"
+            sequence="10"/>
+
         <!-- Approval History Views -->
         <record id="view_approval_history_list" model="ir.ui.view">
             <field name="name">nn.approval.history.list</field>
@@ -54,6 +60,12 @@
             <field name="res_model">nn.approval.history</field>
             <field name="view_mode">list</field>
         </record>
+
+        <menuitem id="menu_approval_history"
+            name="Approval History"
+            parent="menu_fund_reports"
+            action="action_approval_history"
+            sequence="20"/>
 
         <!-- Fund Config Form -->
         <record id="view_fund_config_form" model="ir.ui.view">
@@ -93,6 +105,12 @@
             <field name="res_model">nn.fund.config</field>
             <field name="view_mode">list,form</field>
         </record>
+
+        <menuitem id="menu_fund_config"
+            name="Fund Settings"
+            parent="menu_fund_config_root"
+            action="action_fund_config"
+            sequence="10"/>
 
         <!-- Fund Dashboard -->
         <record id="view_fund_dashboard_form" model="ir.ui.view">
@@ -148,11 +166,11 @@
             </field>
         </record>
 
-        <record id="action_fund_dashboard" model="ir.actions.act_window">
+        <record id="action_fund_dashboard" model="ir.actions.server">
             <field name="name">Fund Dashboard</field>
-            <field name="res_model">nn.fund.dashboard</field>
-            <field name="view_mode">form</field>
-            <field name="target">current</field>
+            <field name="model_id" ref="model_nn_fund_dashboard"/>
+            <field name="state">code</field>
+            <field name="code">action = model.get_dashboard_data()._get_dashboard_action()</field>
         </record>
 
         <menuitem id="menu_fund_dashboard"

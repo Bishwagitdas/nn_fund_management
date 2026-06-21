@@ -67,11 +67,11 @@ class FundBill(models.Model):
                 )
             rec.state = 'posted'
             rec.message_post(body=f'Bill posted by {self.env.user.name}. Amount: {rec.amount:.2f}')
-            req._compute_remaining()
+            req.sudo()._compute_remaining()
             if rec.project_id:
-                rec.project_id._compute_balances()
+                rec.project_id.sudo()._compute_balances()
             if rec.expense_head_id:
-                rec.expense_head_id._compute_balances()
+                rec.expense_head_id.sudo()._compute_balances()
 
     def action_cancel(self):
         for rec in self:
@@ -82,11 +82,11 @@ class FundBill(models.Model):
             rec.message_post(body=f'Bill cancelled by {self.env.user.name}.')
             if was_posted:
                 # Restore amount back to requisition remaining billable
-                rec.requisition_id._compute_remaining()
+                rec.requisition_id.sudo()._compute_remaining()
                 if rec.project_id:
-                    rec.project_id._compute_balances()
+                    rec.project_id.sudo()._compute_balances()
                 if rec.expense_head_id:
-                    rec.expense_head_id._compute_balances()
+                    rec.expense_head_id.sudo()._compute_balances()
 
     def unlink(self):
         for rec in self:

@@ -55,10 +55,10 @@ class FundTransfer(models.Model):
 
     def _get_source_balance(self):
         if self.transfer_type in ('project_project', 'project_expense'):
-            self.source_project_id._compute_balances()
+            self.source_project_id.sudo()._compute_balances()
             return self.source_project_id.available_fund, self.source_project_id.name
         else:
-            self.source_expense_head_id._compute_balances()
+            self.source_expense_head_id.sudo()._compute_balances()
             return self.source_expense_head_id.available_fund, self.source_expense_head_id.name
 
     def _validate_before_submit(self):
@@ -76,7 +76,7 @@ class FundTransfer(models.Model):
         for f in [self.source_project_id, self.source_expense_head_id,
                   self.destination_project_id, self.destination_expense_head_id]:
             if f:
-                f._compute_balances()
+                f.sudo()._compute_balances()
 
     def _on_submit(self):
         self._refresh_all_balances()

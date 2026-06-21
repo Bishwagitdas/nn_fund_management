@@ -81,7 +81,7 @@ class ApprovalMixin(models.AbstractModel):
             'new_state': new_state,
             field_name: self.id,
         }
-        self.env['nn.approval.history'].create(vals)
+        self.env['nn.approval.history'].sudo().create(vals)
 
     def action_submit(self):
         for rec in self:

@@ -40,7 +40,7 @@ class IncomingFund(models.Model):
             if rec.amount <= 0:
                 raise UserError('Amount must be greater than zero.')
             rec.state = 'confirmed'
-            rec.fund_account_id._compute_balances()
+            rec.fund_account_id.sudo()._compute_balances()
             rec.message_post(body=f'Fund of {rec.amount} confirmed by {self.env.user.name}.')
 
     def action_cancel(self):
@@ -49,7 +49,7 @@ class IncomingFund(models.Model):
                 if not self.env.user.has_group('nn_fund_management.group_fund_administrator'):
                     raise UserError('Only Fund Administrators can cancel confirmed funds.')
             rec.state = 'cancelled'
-            rec.fund_account_id._compute_balances()
+            rec.fund_account_id.sudo()._compute_balances()
 
     def unlink(self):
         for rec in self:

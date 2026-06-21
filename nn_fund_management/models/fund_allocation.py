@@ -41,7 +41,7 @@ class FundAllocation(models.Model):
             if rec.amount <= 0:
                 raise UserError('Allocation amount must be greater than zero.')
             account = rec.fund_account_id
-            account._compute_balances()
+            account.sudo()._compute_balances()
             if account.unassigned_balance < rec.amount:
                 raise UserError(
                     f'Insufficient unassigned balance. '
@@ -51,23 +51,23 @@ class FundAllocation(models.Model):
 
     def _on_submit(self):
         # Amount moves from unassigned → on hold (computed automatically via _compute_balances)
-        self.fund_account_id._compute_balances()
+        self.fund_account_id.sudo()._compute_balances()
 
     def _on_approve(self):
         # Amount moves from on hold → assigned to project/expense
-        self.fund_account_id._compute_balances()
+        self.fund_account_id.sudo()._compute_balances()
         if self.project_id:
-            self.project_id._compute_balances()
+            self.project_id.sudo()._compute_balances()
         if self.expense_head_id:
-            self.expense_head_id._compute_balances()
+            self.expense_head_id.sudo()._compute_balances()
 
     def _on_reject(self):
         # Amount returns from hold → unassigned
-        self.fund_account_id._compute_balances()
+        self.fund_account_id.sudo()._compute_balances()
 
     def _on_cancel(self):
-        self.fund_account_id._compute_balances()
+        self.fund_account_id.sudo()._compute_balances()
         if self.project_id:
-            self.project_id._compute_balances()
+            self.project_id.sudo()._compute_balances()
         if self.expense_head_id:
-            self.expense_head_id._compute_balances()
+            self.expense_head_id.sudo()._compute_balances()

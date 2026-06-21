@@ -85,11 +85,11 @@ class FundRequisition(models.Model):
             if rec.amount <= 0:
                 raise UserError('Requisition amount must be greater than zero.')
             if rec.requisition_type == 'project' and rec.project_id:
-                rec.project_id._compute_balances()
+                rec.project_id.sudo()._compute_balances()
                 available = rec.project_id.available_fund
                 source_name = rec.project_id.name
             elif rec.requisition_type == 'expense_head' and rec.expense_head_id:
-                rec.expense_head_id._compute_balances()
+                rec.expense_head_id.sudo()._compute_balances()
                 available = rec.expense_head_id.available_fund
                 source_name = rec.expense_head_id.name
             else:
@@ -102,21 +102,21 @@ class FundRequisition(models.Model):
 
     def _on_submit(self):
         if self.project_id:
-            self.project_id._compute_balances()
+            self.project_id.sudo()._compute_balances()
         if self.expense_head_id:
-            self.expense_head_id._compute_balances()
+            self.expense_head_id.sudo()._compute_balances()
 
     def _on_approve(self):
         if self.project_id:
-            self.project_id._compute_balances()
+            self.project_id.sudo()._compute_balances()
         if self.expense_head_id:
-            self.expense_head_id._compute_balances()
+            self.expense_head_id.sudo()._compute_balances()
 
     def _on_reject(self):
         if self.project_id:
-            self.project_id._compute_balances()
+            self.project_id.sudo()._compute_balances()
         if self.expense_head_id:
-            self.expense_head_id._compute_balances()
+            self.expense_head_id.sudo()._compute_balances()
 
     def _on_cancel(self):
         self._on_reject()
@@ -131,6 +131,6 @@ class FundRequisition(models.Model):
                     body=f'Requisition closed. Unused amount {rec.remaining_billable_amount:.2f} released back.')
             rec.state = 'closed'
             if rec.project_id:
-                rec.project_id._compute_balances()
+                rec.project_id.sudo()._compute_balances()
             if rec.expense_head_id:
-                rec.expense_head_id._compute_balances()
+                rec.expense_head_id.sudo()._compute_balances()

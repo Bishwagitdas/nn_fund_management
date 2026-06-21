@@ -81,17 +81,9 @@
             parent="menu_fund_management_root"
             sequence="40"/>
 
-        <menuitem id="menu_audit_log"
-            name="Audit Log"
-            parent="menu_fund_reports"
-            action="action_audit_log"
-            sequence="10"/>
-
-        <menuitem id="menu_approval_history"
-            name="Approval History"
-            parent="menu_fund_reports"
-            action="action_approval_history"
-            sequence="20"/>
+        <!-- menu_audit_log and menu_approval_history are defined in
+             dashboard_views.xml, next to their actions (action_audit_log,
+             action_approval_history) -->
 
         <!-- Configuration -->
         <menuitem id="menu_fund_config_root"
@@ -100,10 +92,7 @@
             sequence="99"
             groups="nn_fund_management.group_fund_administrator"/>
 
-        <menuitem id="menu_fund_config"
-            name="Fund Settings"
-            parent="menu_fund_config_root"
-            action="action_fund_config"
-            sequence="10"/>
+        <!-- menu_fund_config is defined in dashboard_views.xml, next to
+             its action (action_fund_config) -->
     </data>
 </odoo>

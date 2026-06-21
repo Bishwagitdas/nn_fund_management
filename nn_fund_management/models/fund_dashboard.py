@@ -1,12 +1,18 @@
 from odoo import models, fields, api
 
 
-class FundDashboard(models.TransientModel):
-    """Transient model backing the dashboard view. Each open recomputes
-    fresh KPI numbers from live data - nothing is stored."""
+class FundDashboard(models.Model):
+    """Regular (non-transient) model backing the dashboard view, so it opens
+    as a normal full-page nav item instead of a modal dialog.
+
+    There is one record per company, kept up to date in place - opening the
+    dashboard (or hitting Refresh) recomputes the KPIs onto that same record
+    rather than creating new rows each time."""
     _name = 'nn.fund.dashboard'
     _description = 'Fund Management Dashboard'
+    _rec_name = 'name'
 
+    name = fields.Char(default='Fund Dashboard')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
 
     total_received = fields.Monetary(string='Total Funds Received', currency_field='currency_id')
@@ -42,10 +48,10 @@ class FundDashboard(models.TransientModel):
             rec.expense_balance_ids = self.env['nn.expense.head'].search(
                 [('company_id', '=', rec.company_id.id)])
 
-    @api.model
-    def get_dashboard_data(self):
-        """Returns a fresh dashboard record with computed KPIs."""
-        company = self.env.company
+    def _compute_kpi_values(self):
+        """Returns the dict of fresh KPI values for this record's company."""
+        self.ensure_one()
+        company = self.company_id or self.env.company
         accounts = self.env['nn.fund.account'].search([('company_id', '=', company.id)])
 
         pending_alloc = self.env['nn.fund.allocation'].search_count([
@@ -66,8 +72,10 @@ class FundDashboard(models.TransientModel):
         expense_heads = self.env['nn.expense.head'].search([('company_id', '=', company.id)])
         total_spent += sum(expense_heads.mapped('total_spent'))
 
-        return self.create({
+        return {
+            'name': 'Fund Dashboard',
             'company_id': company.id,
+            'currency_id': company.currency_id.id,
             'total_received': sum(accounts.mapped('total_received')),
             'total_unassigned': sum(accounts.mapped('unassigned_balance')),
             'total_on_hold': sum(accounts.mapped('on_hold_amount')),
@@ -76,15 +84,33 @@ class FundDashboard(models.TransientModel):
             'pending_allocations': pending_alloc,
             'pending_requisitions': pending_req,
             'pending_transfers': pending_trf,
-        })
+        }
 
-    def action_refresh(self):
+    @api.model
+    def get_dashboard_data(self):
+        """Finds (or creates) the single dashboard record for the current
+        company and refreshes its KPI values in place."""
+        company = self.env.company
+        record = self.search([('company_id', '=', company.id)], limit=1)
+        if not record:
+            record = self.create({'company_id': company.id})
+        record.write(record._compute_kpi_values())
+        return record
+
+    def _get_dashboard_action(self):
+        """Returns the act_window dict to open this dashboard record as a
+        normal full-page view (no modal/dialog)."""
         self.ensure_one()
-        fresh = self.get_dashboard_data()
         return {
             'type': 'ir.actions.act_window',
+            'name': 'Fund Dashboard',
             'res_model': 'nn.fund.dashboard',
-            'res_id': fresh.id,
+            'res_id': self.id,
             'view_mode': 'form',
             'target': 'current',
         }
+
+    def action_refresh(self):
+        self.ensure_one()
+        self.write(self._compute_kpi_values())
+        return self._get_dashboard_action()
